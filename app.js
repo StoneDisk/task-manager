@@ -6,18 +6,23 @@ const tasksRoutes = require('./routes/tasks');
 const connectDB = require('./db/connect');
 // Needed to read environment variables
 require('dotenv').config();
+const invalidResourceWarning = require('./middlewares/404');
+const serverErrorHandler = require('./middlewares/500');
 
-// Middlewares
+/* Middlewares */
 app.use(express.json());
+app.use(express.static('./public'));
 
-
-// Routes
-app.get("/hello", (req, res) => {
-    res.send("Task Manager App");
-});
-
-// this middleware will setup taskRoutes to use the indicated base / root path
+// this middleware will setup taskRoutes router object as the routing 
+// mechanism for this app and to use the indicated base / root path
 app.use("/api/v1/tasks", tasksRoutes);
+
+// this middleware is trigerred when client tries to access 
+// a non-existent resource
+app.use(invalidResourceWarning);
+// this middleware is triggered when the error originated from
+// the server in place of the default express error handler
+app.use(serverErrorHandler);
 
 
 const port = 3000;
