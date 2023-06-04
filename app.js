@@ -7,7 +7,7 @@ const connectDB = require('./db/connect');
 // Needed to read environment variables
 require('dotenv').config();
 const invalidResourceWarning = require('./middlewares/404');
-const serverErrorHandler = require('./middlewares/500');
+const serverErrorHandler = require('./middlewares/error-handler');
 
 /* Middlewares */
 app.use(express.json());
@@ -25,7 +25,7 @@ app.use(invalidResourceWarning);
 app.use(serverErrorHandler);
 
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 // function that first connects to the database then starts the server 
 const start = async () => {
     try {
